@@ -2,7 +2,7 @@
 #r "./packages/FAKE/tools/FakeLib.dll"
 
 open Fake
-
+open NpmHelper
 // Directories
 let buildDir  = "./build/"
 let deployDir = "./deploy/"
@@ -32,9 +32,19 @@ Target "Deploy" (fun _ ->
     -- "*.zip"
     |> Zip buildDir (deployDir + "ApplicationName." + version + ".zip")
 )
+Target "Web" (fun _ -> 
+  Npm (fun p ->
+    { p with
+        Command = (Run "build")
+        WorkingDirectory = "./src/Site"
+    }
 
+  )
+
+)
 // Build order
 "Clean"
+  ==> "Web"
   ==> "Build"
   ==> "Deploy"
 
