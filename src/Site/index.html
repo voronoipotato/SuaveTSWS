@@ -4,9 +4,36 @@
 <head>
     <meta charset="UTF-8" />
     <title>Hello React!</title>
+    <style>
+        html,
+        body {
+            background: #eee;
+            color: #555;
+            font-family: Nunito, sans-serif;
+            font-size: 24px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        div {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: left;
+            -ms-flex-pack: left;
+            justify-content: left;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+    </style>
+    <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
+    <p>Your latency with this is going to be similar to most games, ~30 millisecond delay</p>
     <div id="container"></div>
 
     <!-- Dependencies -->

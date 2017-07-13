@@ -1,4 +1,5 @@
 open System
+open System.Globalization
 open System.Threading
 open Suave
 open Suave.Http
@@ -34,8 +35,12 @@ module SuaveWS =
         // the last element is the FIN byte, explained later
         | (Text, data, true) ->
           // the message can be converted to a string
-          let str = UTF8.toString data
-          let response = sprintf "response to %s" str
+          let clientMessage = UTF8.toString data
+          let clientTime =  (float)(Int64.Parse(clientMessage)) |> DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddHours(-4.0).AddMilliseconds
+          let serverTime = DateTime.Now
+          let formatTime (t :DateTime) = t.ToString "h:mm:ss.fff"
+          let latency = clientTime - serverTime
+          let response = sprintf "Latency (%s ms) Client Time %s : Server Time %s " (latency.ToString "fff") (formatTime clientTime) (formatTime serverTime)
           // the response needs to be converted to a ByteSegment
           let byteResponse =
             response
@@ -54,11 +59,11 @@ module SuaveWS =
   let app : WebPart = 
     choose [
       path "/websocket" >=> handShake ws
-      GET >=> choose [ path "/" >=> file "index.html"; browseHome ]
+      GET >=> choose [ path "/" >=> file "index.html"; browseHome]
       NOT_FOUND "Found no handlers." ]
 
 
   [<EntryPoint>]
   let main _ =
-      startWebServer { defaultConfig with logger = Targets.create Verbose[||]} app
+      startWebServer { defaultConfig with homeFolder = Some @"C:\Users\awball\Documents\projects\suaveWS\src\Site\"; logger = Targets.create Verbose[||]} app
       0 // return an integer exit code
