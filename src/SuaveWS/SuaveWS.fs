@@ -1,4 +1,5 @@
 open System
+open System.IO
 open System.Globalization
 open System.Threading
 open Suave
@@ -65,5 +66,5 @@ module SuaveWS =
 
   [<EntryPoint>]
   let main _ =
-      startWebServer { defaultConfig with homeFolder = Some @"C:\Users\awball\Documents\projects\suaveWS\src\Site\"; logger = Targets.create Verbose[||]} app
+      startWebServer { defaultConfig with homeFolder = Some (Path.GetFullPath @"./src/Site"); logger = Targets.create Verbose[||]} app
       0 // return an integer exit code
